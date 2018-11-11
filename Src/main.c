@@ -56,7 +56,6 @@
 //TODO Taste 3 löschen
 #define  TOUCH1         			100           // Grenzwert -> Taste erkannt 
 #define  TOUCH2         			100           // Grenzwert -> Taste erkannt
-#define  TOUCH3								100           // Grenzwert -> Taste erkannt
 
 #define DURATION_TOUCH_SHORT	1						// Hochzählen, erst nach x Touch Erkennungen Event auslösen
 
@@ -84,7 +83,6 @@ typedef struct
 
 TasteTypeDef taste1;
 TasteTypeDef taste2;
-TasteTypeDef taste3;
 
 uint32_t IRQ_TSC;
 
@@ -151,7 +149,7 @@ void tasten(void)
 								// Event Touch Taste 1
 								if (taste1.pressed > DURATION_TOUCH_SHORT && !taste1.triggered)
 								{
-									changeToNextEvent();
+									changeBrightness(LOWER_BRIGHTNESS);
 									taste1.triggered = 1;
 								}
 							}
