@@ -439,6 +439,8 @@ void loadBrightnessData(uint32_t brightness)
 	}	
 }
 /*	LED_Modes	START	*/
+
+
 /*	LED_Mode_Star	*/
 void LED_Mode_Star(void)
 {
@@ -784,6 +786,8 @@ void LED_Mode_RunLED_Wave(uint32_t flagReverse)
 }
 
 /*	LED_Modes	ENDE	*/
+
+
 /* Test cases RGB each one sec */
 void Test_RGB_LEDs(void)
 {
@@ -841,6 +845,16 @@ void Wheel(uint32_t WheelPos, uint16_t i, uint32_t divide)
   return;
 }
 
+
+/*
+* Function: rand_lim
+* ------------------
+* Returns random number within set limirs
+* 
+* int limit:						Max. limit for random number
+*
+* returns:							Random number as int
+*/
 int rand_lim(int limit) 
 {
 /* return a random number between 0 and limit inclusive.
@@ -855,6 +869,18 @@ int rand_lim(int limit)
 
     return retval;
 }
+
+
+/*
+* Function: calculateLED_WaveBrightnessMatrix
+* -------------------------------------------
+* Fills WaveBrightnessMatrix with values (resemble wave moving along the LEDs)
+* 
+* uint32_t *ptrIterLED:						Pointer to the current LED index
+* int *ptrWaveBrightnessMatrix:		Pointer to the WaveBrightnessMatrix
+*
+* returns:								None
+*/
 void calculateLED_WaveBrightnessMatrix(uint32_t *ptrIterLED, int *ptrWaveBrightnessMatrix)
 {
 	/* Calculate Matrix */
@@ -950,7 +976,7 @@ void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue
 
 /*
 * Function: calcLED
-* --------------------
+* -----------------
 * Calculates the values for the bit array for the first LEDs, sets the rest to 0
 * 
 * uint32_t intByteGreen:	Color intensity as one byte (dark: 0, max: 255)
@@ -1017,7 +1043,7 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 
 /*
 * Function: shiftForLED
-* --------------------
+* ---------------------
 * Pushes the values of the bit array via the defined GPIO out to the LEDs
 * 
 * returns:								None
@@ -1072,7 +1098,7 @@ void shiftForLED(void)
 
 /*
 * Function: shift_SW_LED
-* --------------------
+* ----------------------
 * Lights up the number of LEDs with defined color in the rgbLED array
 * 
 * returns:								None
