@@ -874,7 +874,18 @@ void calculateLED_WaveBrightnessMatrix(uint32_t *ptrIterLED, int *ptrWaveBrightn
 		(*ptrIterLED)++;
 	}	
 }
-/*Calc bytes out of integer RGB LED*/
+/*
+* Function: calcOneLED
+* --------------------
+* Calculates the values for the bit array for one certain LED
+* 
+* uint32_t intByteGreen:	Color intensity as one byte (dark: 0, max: 255)
+* uint32_t intByteRed:		Color intensity as one byte (dark: 0, max: 255)
+* uint32_t intByteBlue:		Color intensity as one byte (dark: 0, max: 255)
+* uint32_t lightLED:			LED index, if set to 0 all entries in the bit array get set to 0
+*
+* returns:								None
+*/
 void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, uint32_t lightLED)
 {
 		
@@ -888,6 +899,7 @@ void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue
 	
 	for (uint32_t color=0; color<3; color++) 
 	{
+		// Green
 		if (color==0) {
 			for (uint32_t k=0; k<8; k++) 
 			{
@@ -896,6 +908,7 @@ void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue
 				thebit[k] = masked_n >> (7-k);
 			}
 		}
+		// Red
 		else if (color==1) {
 			for (uint32_t k=0; k<8; k++) 
 			{
@@ -904,6 +917,7 @@ void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue
 				thebit[k+8] = masked_n >> (7-k);
 			}
 		}
+		// Blue
 		else if (color==2) {
 			for (uint32_t k=0; k<8; k++) 
 			{
@@ -912,12 +926,12 @@ void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue
 				thebit[k+16] = masked_n >> (7-k);
 			}
 		}
-		/*Color data*/
+		/* Color data */
 		for (uint32_t jter = 0; jter < 24; jter++)
 		{
 			thebitArray[jter+24*(lightLED-1)] = thebit[jter];
 		}
-		/*Black data*/
+		/* Black data */
 		if (!lightLED)
 		{
 			for (uint32_t kter = 0; kter < NUM_LEDs; kter++)
@@ -982,53 +996,6 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 			}
 		}		
 	}
-	/*	
-	if (changeColorMode)
-	{
-		if (colorChangeRGB==1) {
-		for (uint32_t k=0; k<8; k++) 
-			{
-				if (!intByteGreen) 
-				{
-					mask =  1 << (7-k);
-					masked_n = 5 & mask;
-					thebit[k] = masked_n >> (7-k);
-				}
-				thebit[k+8] = 0;
-				thebit[k+16] = 0;
-			}
-		}
-		else if (colorChangeRGB==0) {
-			for (uint32_t k=0; k<8; k++) 
-			{
-				if (!intByteRed) 
-				{
-					mask =  1 << (7-k);
-					masked_n = 5 & mask;
-					thebit[k+8] = masked_n >> (7-k);
-				}
-				thebit[k] = 0;
-				thebit[k+16] = 0;
-			}
-		}
-		else if (colorChangeRGB==2) {
-			for (uint32_t k=0; k<8; k++) 
-			{
-				if (!intByteBlue) 
-				{
-					mask =  1 << (7-k);
-					masked_n = 5 & mask;
-					thebit[k+16] = masked_n >> (7-k);
-				}
-				thebit[k] = 0;
-				thebit[k+8] = 0;
-			}
-		}
-		for (uint32_t jter = 0; jter < 24; jter++)
-		{
-			thebitArray[jter+24*(NUM_LEDs-1)] = thebit[jter];
-		}
-	}*/
 }
 
 
@@ -1075,82 +1042,6 @@ void shiftForLED(void)
 		GPIOF->BRR = GPIO_PIN_1;
 		}
 	}
-//	for (uint32_t run = 24*(NUM_LEDs-8); run < 24*NUM_LEDs; run++)
-//	{
-//		if(thebitArray[run] == 0)
-//		{
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		
-//		GPIOF->BRR = GPIO_PIN_1;
-//		GPIOF->BRR = GPIO_PIN_1;
-//		GPIOF->BRR = GPIO_PIN_1;
-//		}
-//		else
-//		{
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		
-//		GPIOF->BRR = GPIO_PIN_1;
-//		}
-//	}
-//	for (uint32_t run = 0; run < 24*(NUM_LEDs-8); run++)
-//	{
-//		if(thebitArray[run] == 0)
-//		{
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		
-//		GPIOF->BRR = GPIO_PIN_1;
-//		GPIOF->BRR = GPIO_PIN_1;
-//		GPIOF->BRR = GPIO_PIN_1;
-//		}
-//		else
-//		{
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		GPIOF->BSRR = GPIO_PIN_1;
-//		
-//		GPIOF->BRR = GPIO_PIN_1;
-//		}
-//	}
 	__enable_irq();
 	#pragma no_inline
 }
