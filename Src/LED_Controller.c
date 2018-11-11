@@ -134,7 +134,7 @@ void userRunControl(void)
 				flag_delay_operation = 0;
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
-				LED_Mode_RunOneColor(1, 1);
+				LED_Mode_RunOneColor(USE_RGBSET_COLOR, 1);
 				break;
 			case 1:	
 				/* Set variables */
@@ -142,7 +142,7 @@ void userRunControl(void)
 				flag_delay_operation = 0;
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
-				LED_Mode_RunOneColor_Mirror(1,2);
+				LED_Mode_RunOneColor_Mirror(USE_RGBSET_COLOR,2);
 				break;
 			case 2:
 				/* Set variables */
@@ -150,7 +150,7 @@ void userRunControl(void)
 				flag_delay_operation = 0;
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
-				LED_Mode_RunOneColor(1, 3);
+				LED_Mode_RunOneColor(USE_RGBSET_COLOR, 3);
 				break;
 			case 3:
 				/* Set variables */
@@ -545,7 +545,7 @@ void LED_Mode_RunOneColor(uint32_t flagColor, uint32_t numberLEDsRunning)
 	if (numberLEDsRunning == 3) correctionFactor = 2;
 	
 	/*Init check if startup and color not set by now or run with default color*/
-	if (!flagColor)
+	if (flagColor == USE_DEFAULT_COLOR)
 	{
 		rgbLED[0] = runOneColor_rgbLED[0];
 		rgbLED[1] = runOneColor_rgbLED[1];
@@ -584,7 +584,7 @@ void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, uint32_t numberLEDsRunning)
 	if (numberLEDsRunning == 2) correctionFactor = 1;
 	
 	/*Init check if startup and color not set by now or run with default color*/
-	if (!flagColor)
+	if (flagColor == USE_DEFAULT_COLOR)
 	{
 		rgbLED[0] = runOneColor_rgbLED[0];
 		rgbLED[1] = runOneColor_rgbLED[1];

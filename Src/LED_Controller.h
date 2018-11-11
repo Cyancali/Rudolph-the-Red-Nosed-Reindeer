@@ -12,6 +12,10 @@
 /* Define number of LEDs */
 #define NUM_LEDs 					7
 
+/* OneRun Default Color */
+#define USE_DEFAULT_COLOR	0
+#define USE_RGBSET_COLOR	1
+
 /* RGB LED parameter */
 extern int rgbLED[3];
 
