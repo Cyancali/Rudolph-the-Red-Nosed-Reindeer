@@ -874,6 +874,8 @@ void calculateLED_WaveBrightnessMatrix(uint32_t *ptrIterLED, int *ptrWaveBrightn
 		(*ptrIterLED)++;
 	}	
 }
+
+
 /*
 * Function: calcOneLED
 * --------------------
@@ -946,8 +948,18 @@ void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue
 }
 
 
-
-/*Calc bytes out of integer RGB LED*/
+/*
+* Function: calcLED
+* --------------------
+* Calculates the values for the bit array for the first LEDs, sets the rest to 0
+* 
+* uint32_t intByteGreen:	Color intensity as one byte (dark: 0, max: 255)
+* uint32_t intByteRed:		Color intensity as one byte (dark: 0, max: 255)
+* uint32_t intByteBlue:		Color intensity as one byte (dark: 0, max: 255)
+* uint32_t lightLED:			LED number
+*
+* returns:								None
+*/
 void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, uint32_t lightLED)
 {
 	
@@ -956,6 +968,7 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 	
 	for (uint32_t color=0; color<3; color++) 
 	{
+		// Green
 		if (color==0) {
 			for (uint32_t k=0; k<8; k++) 
 			{
@@ -964,6 +977,7 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 				thebit[k] = masked_n >> (7-k);
 			}
 		}
+		// Red
 		else if (color==1) {
 			for (uint32_t k=0; k<8; k++) 
 			{
@@ -972,6 +986,7 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 				thebit[k+8] = masked_n >> (7-k);
 			}
 		}
+		// Blue
 		else if (color==2) {
 			for (uint32_t k=0; k<8; k++) 
 			{
@@ -980,7 +995,7 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 				thebit[k+16] = masked_n >> (7-k);
 			}
 		}
-		
+		// Colored
 		for (uint32_t iter = 0; iter < lightLED; iter++)
 		{
 			for (uint32_t jter = 0; jter < 24; jter++)
@@ -988,6 +1003,7 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 				thebitArray[jter+24*iter] = thebit[jter];
 			}
 		}
+		// Blacked
 		for (uint32_t kter = 0; kter < NUM_LEDs-lightLED; kter++)
 		{
 			for (uint32_t lter = 0; lter < 24; lter++) 
@@ -999,6 +1015,13 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 }
 
 
+/*
+* Function: shiftForLED
+* --------------------
+* Pushes the values of the bit array via the defined GPIO out to the LEDs
+* 
+* returns:								None
+*/
 void shiftForLED(void)
 {
 	//__attribute__((optimize(0)));
@@ -1045,7 +1068,15 @@ void shiftForLED(void)
 	__enable_irq();
 	#pragma no_inline
 }
-/*Shift byte to 8 RGB LED and calc*/
+
+
+/*
+* Function: shift_SW_LED
+* --------------------
+* Lights up the number of LEDs with defined color in the rgbLED array
+* 
+* returns:								None
+*/
 void shift_SW_LED(uint32_t lightLEDs)
 {
 	calcLED(rgbLED[1], rgbLED[0], rgbLED[2], lightLEDs);
