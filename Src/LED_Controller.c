@@ -111,6 +111,14 @@ int thebitArray[24*NUM_LEDs];
 
 
 /* Functions	*/
+
+/*
+* Function: userRunControl
+* ------------------------
+* Iterates through operation modes and resets LEDs after operation is done
+*
+* returns:							None
+*/
 void userRunControl(void)
 {
 	/* Check if any operation is running and delay is over or no operation running */		
@@ -243,6 +251,15 @@ void userRunControl(void)
 		flag_delay_smoothColorChange = 0;
 	}
 }
+
+
+/*
+* Function: userTimeControl
+* -------------------------
+* Counts ticks (in Milliseconds) and accordingly sets flags
+*
+* returns:							None
+*/
 void userTimeControl(void)
 {
 	/*	Count millis	*/
@@ -438,8 +455,9 @@ void loadBrightnessData(uint32_t brightness)
 		slideColorIndex = 2;
 	}	
 }
-/*	LED_Modes	START	*/
-
+/*****************************************************/
+/*	LED_Modes	START																	 */
+/*****************************************************/
 
 /*	LED_Mode_Star	*/
 void LED_Mode_Star(void)
@@ -785,10 +803,18 @@ void LED_Mode_RunLED_Wave(uint32_t flagReverse)
 	}
 }
 
-/*	LED_Modes	ENDE	*/
+/*****************************************************/
+/*	LED_Modes	ENDE																	*/
+/*****************************************************/
 
 
-/* Test cases RGB each one sec */
+/*
+* Function: Test_RGB_LEDs
+* -----------------------
+* Lights all LEDs for one second (red, green, blue)
+*
+* returns:							None
+*/
 void Test_RGB_LEDs(void)
 {
 	if (1)
@@ -817,9 +843,18 @@ void Test_RGB_LEDs(void)
 		rgbLED[2] = 0;
 	}
 }
+
+
+/*
+* Function: litAllLEDs
+* --------------------
+* Lights all LEDs with the set color in rgbLED
+*
+* returns:							None
+*/
 void litAllLEDs(void)
 {
-	// Calculate bytes for the certain LEDs set to HIGH
+
 	for (uint32_t iterLED = 0; iterLED < NUM_LEDs; iterLED++)
 	{
 		calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], iterLED+1);
@@ -827,8 +862,15 @@ void litAllLEDs(void)
 	// Send bytes for LEDs
 	shiftForLED();
 }
-// Input a value 0 to 255 to get a color value.
-// The colours are a transition r - g - b - back to r.
+
+/*
+* Function: Wheel
+* ---------------
+* Input a value 0 to 255 to get a color value.
+* The colours are a transition r - g - b - back to r.
+*
+* returns:							None
+*/
 void Wheel(uint32_t WheelPos, uint16_t i, uint32_t divide) 
 {
   if(WheelPos < 85) {
@@ -849,7 +891,7 @@ void Wheel(uint32_t WheelPos, uint16_t i, uint32_t divide)
 /*
 * Function: rand_lim
 * ------------------
-* Returns random number within set limirs
+* Returns random number within set limits
 * 
 * int limit:						Max. limit for random number
 *
