@@ -113,7 +113,6 @@ void tasten(void)
 			case 0:
 					HAL_TSC_IODischarge(&htsc,1);
 					HAL_TSC_IODischarge(&htsc,2);
-					HAL_TSC_IODischarge(&htsc,3);
 			    nextstep = 1;
 			break;
 				
@@ -166,7 +165,6 @@ void tasten(void)
 						}
 						HAL_TSC_IODischarge(&htsc,1);
 						HAL_TSC_IODischarge(&htsc,2);
-						HAL_TSC_IODischarge(&htsc,3);
 						nextstep = 3;
 					}
 			break;
@@ -220,61 +218,6 @@ void tasten(void)
 						}
 						HAL_TSC_IODischarge(&htsc,1);
 						HAL_TSC_IODischarge(&htsc,2);
-						HAL_TSC_IODischarge(&htsc,3);
-						nextstep = 5;
-					}
-			break;
-				
-			case 5:
-					conf.ChannelIOs = TSC_GROUP1_IO3;
-					conf.SamplingIOs = TSC_GROUP1_IO4;
-				
-					HAL_TSC_IOConfig(&htsc,&conf);
-					HAL_TSC_Start_IT(&htsc);
-			    nextstep = 6;
-			break;
-		
-			case 6:
-					if(IRQ_TSC)
-					{
-						IRQ_TSC = 0;
-						state = HAL_TSC_GetState(&htsc);
-						if(state == HAL_TSC_STATE_READY)
-						{
-							taste3.tsc_wert = HAL_TSC_GroupGetValue(&htsc,0);
-							if(taste3.mittelsum == 0) 
-							{
-								taste3.mittelsum = taste3.tsc_wert*FILTER;   											// Startwert
-							}
-							// P-Glied
-							else
-							{
-								taste3.mittelsum += taste3.tsc_wert - (taste3.mittelsum/FILTER);   // Mittelwert Summe
-								taste3.mittel = taste3.mittelsum/FILTER;   												// Mittelwert
-							}
-							// Taste gedrückt
-							if(taste3.tsc_wert + TOUCH3 < taste3.mittel)
-							{
-								taste3.released = 0;
-								taste3.pressed = (taste3.pressed < 0xFFFF) ? taste3.pressed+1 : taste3.pressed;	// Overflow Schutz
-								// Event Touch Taste 1
-								if (taste3.pressed > DURATION_TOUCH_SHORT && !taste3.triggered)
-								{
-									changeBrightness(LOWER_BRIGHTNESS);
-									taste3.triggered = 1;
-								}
-							}
-							// Taste nicht gedrückt
-							else
-							{
-								taste3.pressed = 0;
-								taste3.triggered = 0;
-								taste3.released = (taste3.released < 0xFFFF) ? taste3.released+1 : taste3.released;	// Overflow Schutz
-							}
-						}
-						HAL_TSC_IODischarge(&htsc,1);
-						HAL_TSC_IODischarge(&htsc,2);
-						HAL_TSC_IODischarge(&htsc,3);
 						nextstep = 1;
 					}
 			break;
