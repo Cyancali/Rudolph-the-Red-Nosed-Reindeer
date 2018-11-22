@@ -39,7 +39,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f0xx_hal.h"
-#include "iwdg.h"
 #include "tsc.h"
 #include "gpio.h"
 
@@ -266,7 +265,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_IWDG_Init();
   MX_TSC_Init();
 
   /* Initialize interrupts */
