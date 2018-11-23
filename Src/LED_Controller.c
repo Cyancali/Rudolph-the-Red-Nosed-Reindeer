@@ -17,7 +17,7 @@ int Yfactor = 1;
 int Ofactor = 1;
 int Pfactor = 2;
 
-uint32_t delay_smoothColorChange 			= 100;
+uint32_t delay_smoothColorChange 			= 500;
 uint32_t flag_delay_smoothColorChange = 0;
 
 /* Operation GENERAL*/
@@ -227,7 +227,7 @@ void userRunControl(void)
 		if ( !(operationRunning) ) 
 		{
 			/* Reset to rainbow run */
-			operationRunning = 2;
+			operationRunning = 1;	// set to 2 to add between every operation a rainbow run
 			
 			/* Reset operation parameter */
 			runOneColor_iterLED = 0;	
@@ -596,8 +596,8 @@ void LED_Mode_RunOneColor(uint32_t flagColor, uint32_t numberLEDsRunning)
 		// Calculate bytes for the certain LEDs set to HIGH
 		for (signed int iterLED = 0+runOneColor_iterLED; iterLED > (signed) (runOneColor_iterLED-numberLEDsRunning); iterLED--)
 		{
-			iterLED = iterLED;
-			if (iterLED >= 0 && iterLED <= 5) calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], runOneColor_IndexCircle[iterLED]);
+			//if (iterLED >= 0 && iterLED <= 5) calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], runOneColor_IndexCircle[iterLED]);
+			calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], iterLED);
 		}
 		// Send bytes for LEDs
 		shiftForLED();
@@ -611,7 +611,7 @@ void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, uint32_t numberLEDsRunning)
 {		
 	// Correction factor
 	uint32_t correctionFactor = 0;
-	if (numberLEDsRunning == 2) correctionFactor = 1;
+	//if (numberLEDsRunning == 2) correctionFactor = 1;
 	
 	/*Init check if startup and color not set by now or run with default color*/
 	if (flagColor == USE_DEFAULT_COLOR)
@@ -635,8 +635,8 @@ void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, uint32_t numberLEDsRunning)
 		// Calculate bytes for the certain LEDs set to HIGH
 		for (signed int iterLED = 0+runOneColor_iterLED; iterLED > (signed) (runOneColor_iterLED-numberLEDsRunning); iterLED--)
 		{
-			iterLED = iterLED;
-			if (iterLED >= 0 && iterLED <= 5) calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], runOneColor_Mirror_IndexCircle[iterLED]);
+			//if (iterLED >= 0 && iterLED <= 5) calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], runOneColor_Mirror_IndexCircle[iterLED]);
+			calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], iterLED);
 		}
 		// Send bytes for LEDs
 		shiftForLED();
