@@ -325,7 +325,7 @@ void smoothColorChange(void)
 	
 	/* Red */
 	if (rgbLED[0] >= 40 && color == 0) Rfactor = -2;
-	if (rgbLED[0] == 2 && Rfactor == -2) 
+	if (rgbLED[0] == 4 && Rfactor == -2) 
 	{
 		color++;
 		prepareNextColorChange();
@@ -333,7 +333,7 @@ void smoothColorChange(void)
 	
 	/* Orange */
 	if (rgbLED[0] >= 45 && rgbLED[1] >= 15 && color == 1) Ofactor = -1;
-	if (rgbLED[1] == 2 && Ofactor == -1) 
+	if (rgbLED[1] == 4 && Ofactor == -1) 
 	{
 		color++;
 		prepareNextColorChange();
@@ -341,7 +341,7 @@ void smoothColorChange(void)
 	
 	/* Green */
 	if (rgbLED[1] >= 40 && color == 2) Gfactor = -2;
-	if (rgbLED[1] == 2 && Gfactor == -2)
+	if (rgbLED[1] == 4 && Gfactor == -2)
 	{
 		color++;
 		prepareNextColorChange();
@@ -349,7 +349,7 @@ void smoothColorChange(void)
 	
 	/* Yellow */
 	if (rgbLED[0] >= 40 && rgbLED[1] >= 40 && color == 3) Yfactor = -2;
-	if (rgbLED[1] == 2 && Yfactor == -2) 
+	if (rgbLED[1] == 4 && Yfactor == -2) 
 	{
 		color++;
 		prepareNextColorChange();
@@ -357,7 +357,7 @@ void smoothColorChange(void)
 	
 	/* Purple */
 	if (rgbLED[0] >= 40 && rgbLED[2] >= 40 && color == 4) Pfactor = -2;
-	if (rgbLED[2] == 2 && Pfactor == -2) 
+	if (rgbLED[2] == 4 && Pfactor == -2) 
 	{
 		color++;
 		prepareNextColorChange();
@@ -397,33 +397,33 @@ void prepareNextColorChange(void)
 {
 	switch(color) {
 		case 0:
-			rgbLED[0] =  2;
+			rgbLED[0] =  4;
 			rgbLED[1] =  0;
 			rgbLED[2] =  0;
 			Rfactor 	= +2;
 			break;
 		case 1:
-			rgbLED[0] =  6;
-			rgbLED[1] =  2;
+			rgbLED[0] =  12;
+			rgbLED[1] =  4;
 			rgbLED[2] =  0;
 			Ofactor 	= +1;
 			break;
 		case 2:
 			rgbLED[0] =  0;			
-			rgbLED[1] =  2;
+			rgbLED[1] =  4;
 			rgbLED[2] =  0;
 			Gfactor 	= +2;
 			break;
 		case 3:
-			rgbLED[0] =  2;
-			rgbLED[1] =  2;
+			rgbLED[0] =  4;
+			rgbLED[1] =  4;
 			rgbLED[2] =  0;
 			Yfactor 	= +2;
 			break;
 		case 4:
-			rgbLED[0] =  2;
+			rgbLED[0] =  4;
 			rgbLED[1] =  0;
-			rgbLED[2] =  2;
+			rgbLED[2] =  4;
 			Pfactor 	= +2;
 			break;
 		default:
