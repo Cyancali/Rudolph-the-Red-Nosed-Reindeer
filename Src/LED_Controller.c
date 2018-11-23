@@ -580,7 +580,7 @@ void LED_Mode_RunOneColor(uint32_t flagColor, uint32_t numberLEDsRunning)
 {		
 	// Correction factor
 	uint32_t correctionFactor = 0;
-	if (numberLEDsRunning == 3) correctionFactor = 2;
+	//if (numberLEDsRunning == 3) correctionFactor = 2;
 	
 	/*Init check if startup and color not set by now or run with default color*/
 	if (flagColor == USE_DEFAULT_COLOR)
@@ -615,7 +615,7 @@ void LED_Mode_RunOneColor(uint32_t flagColor, uint32_t numberLEDsRunning)
 }
 
 /*	LED_Mode_RunOneColorOneLED_Mirror	*/
-void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, uint32_t numberLEDsRunning)
+void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, int numberLEDsRunning)
 {		
 	// Correction factor
 	uint32_t correctionFactor = 0;
@@ -630,7 +630,7 @@ void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, uint32_t numberLEDsRunning)
 	}
 	
 	/* Operation done, reset all parameters */
-	if ( runOneColor_Mirror_iterLED == -1 )
+	if ( runOneColor_Mirror_iterLED == -numberLEDsRunning )
 	{
 		operationRunning = 0;		
 		operation++;
@@ -641,10 +641,10 @@ void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, uint32_t numberLEDsRunning)
 		// Blackout all LED bytes
 		calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], 0);
 		// Calculate bytes for the certain LEDs set to HIGH
-		for (signed int iterLED = runOneColor_Mirror_iterLED; iterLED > (signed) (runOneColor_Mirror_iterLED-numberLEDsRunning); iterLED--)
+		for (int iterLED = runOneColor_Mirror_iterLED; iterLED > (runOneColor_Mirror_iterLED-numberLEDsRunning); iterLED--)
 		{
 			//if (iterLED >= 0 && iterLED <= 5) calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], runOneColor_Mirror_IndexCircle[iterLED]);
-			calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], iterLED);
+			if ( iterLED >= 1 ) calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], iterLED);
 		}
 		// Send bytes for LEDs
 		shiftForLED();
