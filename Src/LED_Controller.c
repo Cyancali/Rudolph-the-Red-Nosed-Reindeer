@@ -8,6 +8,14 @@ uint32_t secTick;
 uint32_t minTick;
 uint32_t hTick;
 
+/* PCB Specific live color change */
+// Reindeer Mode
+int red_value = 0;
+int steps = 8;
+
+uint32_t delay_smoothColorChange_PCB			= 50;
+uint32_t flag_delay_smoothColorChange_PCB = 0;
+
 /* Live color change */
 uint32_t color = 0;
 
@@ -25,6 +33,9 @@ uint32_t operation 						= 0;
 uint32_t operationRunning 		= 0;
 uint32_t delay_operation 			= 0;
 uint32_t flag_delay_operation = 0;
+
+uint32_t delay_operation_null 		 = 1;
+uint32_t flag_delay_operation_null = 0;
 
 /* Operation LED_Mode_Star	*/
 int delay_LED_Mode_Star = 25;
@@ -109,10 +120,6 @@ uint32_t slideColorIndex_MAX = 10;
 int thebit[24];
 int thebitArray[24*NUM_LEDs];
 
-/* Reindeer Mode */
-int red_value = 0;
-int steps = 8;
-
 
 /* Functions	*/
 
@@ -135,7 +142,8 @@ void userRunControl(void)
 		/* Start actions */		
 		LED_Mode_RainbowRun();			
 	}
-	else if(flag_delay_operation || !(operationRunning))
+	else if( ( operationRunning && flag_delay_operation)
+				|| (!operationRunning && flag_delay_operation_null) )
 	{
 	
 		/* Execute operation */
@@ -227,7 +235,10 @@ void userRunControl(void)
 		if ( !(operationRunning) ) 
 		{
 			/* Reset to rainbow run */
-			operationRunning = 1;	// set to 2 to add between every operation a rainbow run
+			operationRunning = 0;	// set to 2 to add between every operation a rainbow run
+			
+			/* Reset timeout counter */
+			flag_delay_operation_null = 0;
 			
 			/* Reset operation parameter */
 			runOneColor_iterLED = 0;	
@@ -246,6 +257,13 @@ void userRunControl(void)
 			shiftForLED();
 			HAL_Delay(50);
 		}
+	}
+	
+	/* PCB Specific Smooth color change */
+	if (flag_delay_smoothColorChange_PCB)
+	{
+		smoothColorChange_PCB();
+		flag_delay_smoothColorChange_PCB = 0;
 	}
 	
 	/* Smooth color change */
@@ -273,9 +291,10 @@ void userTimeControl(void)
 		milliTick++;
 		msTick++;
 		/*Set milliFlags*/
-		if (!(milliTick%delay_operation)) 				flag_delay_operation 					= 1;
-		if (!(milliTick%delay_smoothColorChange)) flag_delay_smoothColorChange 	= 1;
-		if (!(milliTick%delay_LED_Mode_RainbowRun_IterDelay)) delay_LED_Mode_RainbowRun_IterFlag = 1;
+		if (!(milliTick%delay_operation)) 										flag_delay_operation 								= 1;
+		if (!(milliTick%delay_smoothColorChange)) 						flag_delay_smoothColorChange 				= 1;
+		if (!(milliTick%delay_smoothColorChange_PCB)) 				flag_delay_smoothColorChange_PCB 		= 1;
+		if (!(milliTick%delay_LED_Mode_RainbowRun_IterDelay)) delay_LED_Mode_RainbowRun_IterFlag 	= 1;
 		
 		/*	Count seconds	*/
 		if (milliTick >= 1000)
@@ -283,7 +302,7 @@ void userTimeControl(void)
 			milliTick = 0;
 			secTick++;
 			/*Set secFlags*/			
-			//if (!(secTick%1)) {flagBlinkLED = 1;}
+			if (!(secTick%delay_operation_null)) flag_delay_operation_null = 1;
 			
 			/*	Count minutes	*/
 			if (secTick >= 60)
@@ -305,14 +324,17 @@ void userTimeControl(void)
 	}
 }
 
-void smoothColorChange(void)
+void smoothColorChange_PCB(void)
 {
 	/* Change Colors for PCB Specific LED Pattern */
 	/* Calculate red values for reindeer nose */
 	if (red_value >= 40) steps = -1;
 	if (red_value <=  0) steps = +1;
 	red_value += steps;
-	
+}
+
+void smoothColorChange(void)
+{
 	/* Change colors */
 	
 	/* Red */

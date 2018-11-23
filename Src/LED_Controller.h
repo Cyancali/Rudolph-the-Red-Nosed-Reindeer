@@ -30,6 +30,7 @@ extern int rgbLED[3];
 void userRunControl(void);
 void userTimeControl(void);
 
+void smoothColorChange_PCB(void);
 void smoothColorChange(void);
 void prepareNextColorChange(void);
 
