@@ -74,7 +74,7 @@ uint32_t runLED_Wave_delay = 100;
 uint32_t runLED_Wave_iterLED = 0;
 int waveBrightnessMatrix[12] = {0};
 int runLED_Wave_rgbLED[3] = {0, 0, 0};
-uint32_t runLED_Wave_reverseLUT[11] = {8, 7, 6, 5, 4, 3, 2, 1, 0 ,10, 9};
+uint32_t runLED_Wave_reverseLUT[7] = {6, 5, 4, 3, 2, 1, 0};
 
 /* Operation LED_MODE_RunOneColor	*/
 /* Run with one color */
@@ -84,11 +84,11 @@ uint8_t runOneColor_rgbLED[3]  	=  {15, 0, 0};
 
 int runOneColor_IndexCircle[6] 	= {1, 2, 4, 6, 8, 9};
 int runOneColor_StartCircle 		= 1;
-int runOneColor_EndCircle 			= 9;
+int runOneColor_EndCircle 			= NUM_LEDs;
 
 /* Operation LED_MODE_RunOneColor_Mirror	*/
 /* Run reverse with one color and light one LED */
-uint32_t runOneColor_Mirror_iterLED = 9;
+int runOneColor_Mirror_iterLED = NUM_LEDs;
 
 int runOneColor_Mirror_IndexCircle[6] 	= {9, 8, 6, 4, 2, 1};
 
@@ -228,7 +228,7 @@ void userRunControl(void)
 			/* Reset operation parameter */
 			runOneColor_iterLED = 0;	
 			
-			runOneColor_Mirror_iterLED = 9;
+			runOneColor_Mirror_iterLED = NUM_LEDs;
 			
 			shiningLightsOnTree_iter = shiningLightsOnTree_ITER;			
 			
@@ -602,7 +602,7 @@ void LED_Mode_RunOneColor(uint32_t flagColor, uint32_t numberLEDsRunning)
 		// Blackout all LED bytes
 		calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], 0);
 		// Calculate bytes for the certain LEDs set to HIGH
-		for (signed int iterLED = 0+runOneColor_iterLED; iterLED > (signed) (runOneColor_iterLED-numberLEDsRunning); iterLED--)
+		for (signed int iterLED = runOneColor_iterLED; iterLED > (signed) (runOneColor_iterLED-numberLEDsRunning); iterLED--)
 		{
 			//if (iterLED >= 0 && iterLED <= 5) calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], runOneColor_IndexCircle[iterLED]);
 			calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], iterLED);
@@ -630,7 +630,7 @@ void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, uint32_t numberLEDsRunning)
 	}
 	
 	/* Operation done, reset all parameters */
-	if ( runOneColor_iterLED == 5+1+correctionFactor )
+	if ( runOneColor_Mirror_iterLED == -1 )
 	{
 		operationRunning = 0;		
 		operation++;
@@ -641,7 +641,7 @@ void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, uint32_t numberLEDsRunning)
 		// Blackout all LED bytes
 		calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], 0);
 		// Calculate bytes for the certain LEDs set to HIGH
-		for (signed int iterLED = 0+runOneColor_iterLED; iterLED > (signed) (runOneColor_iterLED-numberLEDsRunning); iterLED--)
+		for (signed int iterLED = runOneColor_Mirror_iterLED; iterLED > (signed) (runOneColor_Mirror_iterLED-numberLEDsRunning); iterLED--)
 		{
 			//if (iterLED >= 0 && iterLED <= 5) calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], runOneColor_Mirror_IndexCircle[iterLED]);
 			calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], iterLED);
@@ -649,7 +649,7 @@ void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, uint32_t numberLEDsRunning)
 		// Send bytes for LEDs
 		shiftForLED();
 		
-		runOneColor_iterLED++;
+		runOneColor_Mirror_iterLED--;
 	}
 }
 
@@ -799,11 +799,11 @@ void LED_Mode_RunLED_Wave(uint32_t flagReverse)
 		/* Run from only one side */
 		else
 		{
-		if (flagReverse) iter = runLED_Wave_reverseLUT[i];
-		
-		runLED_Wave_rgbLED[0] = (rgbLED[0] * waveBrightnessMatrix[iter])/6;
-		runLED_Wave_rgbLED[1] = (rgbLED[1] * waveBrightnessMatrix[iter])/6;
-		runLED_Wave_rgbLED[2] = (rgbLED[2] * waveBrightnessMatrix[iter])/6;
+			if (flagReverse) iter = runLED_Wave_reverseLUT[i];
+			
+			runLED_Wave_rgbLED[0] = (rgbLED[0] * waveBrightnessMatrix[iter])/6;
+			runLED_Wave_rgbLED[1] = (rgbLED[1] * waveBrightnessMatrix[iter])/6;
+			runLED_Wave_rgbLED[2] = (rgbLED[2] * waveBrightnessMatrix[iter])/6;
 		}
 		
 		calcOneLED(runLED_Wave_rgbLED[1], runLED_Wave_rgbLED[0], runLED_Wave_rgbLED[2], i+1);
