@@ -13,7 +13,7 @@ uint32_t hTick;
 int red_value = 0;
 int steps = 8;
 
-uint32_t delay_smoothColorChange_PCB			= 50;
+uint32_t delay_smoothColorChange_PCB			= 55;
 uint32_t flag_delay_smoothColorChange_PCB = 0;
 
 /* Live color change */
@@ -34,7 +34,7 @@ uint32_t operationRunning 		= 0;
 uint32_t delay_operation 			= 0;
 uint32_t flag_delay_operation = 0;
 
-uint32_t delay_operation_null 		 = 1;
+uint32_t delay_operation_null 		 = 3;
 uint32_t flag_delay_operation_null = 0;
 
 /* Operation LED_Mode_Star	*/
@@ -145,69 +145,56 @@ void userRunControl(void)
 	else if( ( operationRunning && flag_delay_operation)
 				|| (!operationRunning && flag_delay_operation_null) )
 	{
+		operationRunning = 1;
+		flag_delay_operation = 0;
+		flag_delay_operation_null = 0;
 	
 		/* Execute operation */
 		switch(operation) {
 			case 0:
 				/* Set variables */
-				operationRunning = 1;
-				flag_delay_operation = 0;
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
 				LED_Mode_RunOneColor(USE_RGBSET_COLOR, 1);
 				break;
 			case 1:	
 				/* Set variables */
-				operationRunning = 1;
-				flag_delay_operation = 0;
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
 				LED_Mode_RunOneColor_Mirror(USE_RGBSET_COLOR,2);
 				break;
 			case 2:
 				/* Set variables */
-				operationRunning = 1;
-				flag_delay_operation = 0;
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
 				LED_Mode_RunOneColor(USE_RGBSET_COLOR, 3);
 				break;
 			case 3:
 				/* Set variables */
-				operationRunning = 1;
-				flag_delay_operation = 0;
 				delay_operation = delay_ShiningLights;
 				/* Start actions */
 				LED_Mode_ShiningLights(3);
 				break;
 			case 4:
 				/* Set variables */
-				operationRunning = 1;
-				flag_delay_operation = 0;
 				delay_operation = runLED_Wave_delay;
 				/* Start actions */
 				LED_Mode_RunLED_Wave(0);
 				break;
 			case 5:
 				/* Set variables */
-				operationRunning = 1;
-				flag_delay_operation = 0;
 				delay_operation = runLED_Wave_delay;
 				/* Start actions */
 				LED_Mode_RunLED_Wave(1);
 				break;
 			case 6:
 				/* Set variables */
-				operationRunning = 1;
-				flag_delay_operation = 0;
 				delay_operation = runLED_Wave_delay;
 				/* Start actions */
 				LED_Mode_RunLED_Wave(2);
 				break;
 			case 7:
 				/* Set variables */
-				operationRunning = 1;
-				flag_delay_operation = 0;
 				delay_operation = runTwoColors_delay;
 				/* Start actions */
 				LED_Mode_RunTwoColors();
@@ -217,8 +204,6 @@ void userRunControl(void)
 				break;			
 			case 9:
 				/* Set variables */
-				operationRunning = 1;
-				flag_delay_operation = 0;
 				delay_operation = delay_LED_Mode_Star;
 				/* Start actions */
 				LED_Mode_Star();
@@ -235,7 +220,7 @@ void userRunControl(void)
 		if ( !(operationRunning) ) 
 		{
 			/* Reset to rainbow run */
-			operationRunning = 0;	// set to 2 to add between every operation a rainbow run
+			//operationRunning = 2;	// set to 2 to add between every operation a rainbow run
 			
 			/* Reset timeout counter */
 			flag_delay_operation_null = 0;
@@ -264,6 +249,7 @@ void userRunControl(void)
 	{
 		smoothColorChange_PCB();
 		flag_delay_smoothColorChange_PCB = 0;
+		shiftForLED();
 	}
 	
 	/* Smooth color change */
@@ -297,17 +283,17 @@ void userTimeControl(void)
 		if (!(milliTick%delay_LED_Mode_RainbowRun_IterDelay)) delay_LED_Mode_RainbowRun_IterFlag 	= 1;
 		
 		/*	Count seconds	*/
-		if (milliTick >= 1000)
+		if (milliTick > 1000)
 		{
-			milliTick = 0;
+			milliTick = 1;
 			secTick++;
 			/*Set secFlags*/			
 			if (!(secTick%delay_operation_null)) flag_delay_operation_null = 1;
 			
 			/*	Count minutes	*/
-			if (secTick >= 60)
+			if (secTick > 60)
 			{
-				secTick = 0;
+				secTick = 1;
 				minTick++;	
 				
 				/*Set minFlags*/
@@ -605,7 +591,7 @@ void LED_Mode_RunOneColor(uint32_t flagColor, uint32_t numberLEDsRunning)
 	}
 	
 	/* Operation done, reset all parameters */
-	if ( runOneColor_iterLED == 5+1+correctionFactor )
+	if ( runOneColor_iterLED == NUM_LEDs )
 	{
 		operationRunning = 0;		
 		operation++;

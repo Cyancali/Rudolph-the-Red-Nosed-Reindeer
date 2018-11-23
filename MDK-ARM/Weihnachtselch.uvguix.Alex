@@ -3517,7 +3517,7 @@
       <Doc>
         <Name>../Src/main.c</Name>
         <ColumnNumber>0</ColumnNumber>
-        <TopLine>152</TopLine>
+        <TopLine>182</TopLine>
         <CurrentLine>253</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders>107</ContractedFolders>
@@ -3525,18 +3525,18 @@
       </Doc>
       <Doc>
         <Name>..\Src\LED_Controller.c</Name>
-        <ColumnNumber>30</ColumnNumber>
-        <TopLine>214</TopLine>
-        <CurrentLine>240</CurrentLine>
+        <ColumnNumber>38</ColumnNumber>
+        <TopLine>155</TopLine>
+        <CurrentLine>594</CurrentLine>
         <Folding>1</Folding>
-        <ContractedFolders>125,277,410,454,461,475,495,528,545,850,887,906,932,958,986,1003,1073</ContractedFolders>
+        <ContractedFolders>125,133,263,271,313,322,396,440,447,461,481,514,531,618,657,715,836,873,892,918,944,972,989,1059</ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
       <Doc>
         <Name>../Src/LED_Controller.h</Name>
-        <ColumnNumber>26</ColumnNumber>
+        <ColumnNumber>16</ColumnNumber>
         <TopLine>2</TopLine>
-        <CurrentLine>33</CurrentLine>
+        <CurrentLine>17</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
