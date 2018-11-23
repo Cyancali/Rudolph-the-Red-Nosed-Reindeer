@@ -74,7 +74,7 @@ uint32_t runLED_Wave_delay = 100;
 uint32_t runLED_Wave_iterLED = 0;
 int waveBrightnessMatrix[12] = {0};
 int runLED_Wave_rgbLED[3] = {0, 0, 0};
-uint32_t runLED_Wave_reverseLUT[7] = {6, 5, 4, 3, 2, 1, 0};
+uint32_t runLED_Wave_reverseLUT[6] = {5, 4, 3, 2, 1, 0};
 
 /* Operation LED_MODE_RunOneColor	*/
 /* Run with one color */
