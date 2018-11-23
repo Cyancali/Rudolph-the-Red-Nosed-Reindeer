@@ -714,15 +714,18 @@ void LED_Mode_ShiningLights(uint32_t NUMBER_LEDs)
 /* LED_Mode_RunTwoColors */
 void LED_Mode_RunTwoColors(void)
 {
-	uint32_t twoColor_rgbLEDs[4][3] = { {12, 0, 0}, {0, 12, 0}, {12, 12, 0}, {12, 8, 0} };
+	uint32_t twoColor_rgbLEDs[4][3] = { {12, 12, 0}, {12, 8, 0}, {12, 0, 0}, {0, 12, 0} };
 	
 	/* Smooth brightness */
 	twoColor_rgbLEDs[0][0] = (twoColor_rgbLEDs[0][0]*runTwoColors_iterShift)/4;
+		
 	twoColor_rgbLEDs[1][1] = (twoColor_rgbLEDs[1][1]*runTwoColors_iterShift)/4;
+		
 	twoColor_rgbLEDs[2][0] = (twoColor_rgbLEDs[2][0]*runTwoColors_iterShift)/4;
 	twoColor_rgbLEDs[2][1] = (twoColor_rgbLEDs[2][1]*runTwoColors_iterShift)/4;
-	twoColor_rgbLEDs[3][0] = (twoColor_rgbLEDs[2][0]*runTwoColors_iterShift)/4;
-	twoColor_rgbLEDs[3][2] = (twoColor_rgbLEDs[2][1]*runTwoColors_iterShift)/4;
+		
+	twoColor_rgbLEDs[3][0] = (twoColor_rgbLEDs[3][0]*runTwoColors_iterShift)/4;
+	twoColor_rgbLEDs[3][1] = (twoColor_rgbLEDs[3][1]*runTwoColors_iterShift)/4;
 	
 	/* Check if LEDs have any iterations left */
 	if ( runTwoColors_iter )
