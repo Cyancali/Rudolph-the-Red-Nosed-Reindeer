@@ -92,8 +92,8 @@
       </MaxPosition>
       <NormalPosition>
         <Top>0</Top>
-        <Left>0</Left>
-        <Right>1364</Right>
+        <Left>-8</Left>
+        <Right>1356</Right>
         <Bottom>766</Bottom>
       </NormalPosition>
     </WindowPosition>
@@ -3525,18 +3525,18 @@
       </Doc>
       <Doc>
         <Name>..\Src\LED_Controller.c</Name>
-        <ColumnNumber>85</ColumnNumber>
-        <TopLine>163</TopLine>
-        <CurrentLine>717</CurrentLine>
+        <ColumnNumber>2</ColumnNumber>
+        <TopLine>164</TopLine>
+        <CurrentLine>573</CurrentLine>
         <Folding>1</Folding>
-        <ContractedFolders>125,133,263,271,313,322,396,440,447,461,481,514,531,579,618,657,839,876,895,921,947,975,992,1062</ContractedFolders>
+        <ContractedFolders>125,133,269,277,319,328,402,446,453,467,487,520,584,623,662,720,776,844,881,926,952,980,1067</ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
       <Doc>
         <Name>../Src/LED_Controller.h</Name>
-        <ColumnNumber>49</ColumnNumber>
-        <TopLine>25</TopLine>
-        <CurrentLine>46</CurrentLine>
+        <ColumnNumber>31</ColumnNumber>
+        <TopLine>4</TopLine>
+        <CurrentLine>24</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>

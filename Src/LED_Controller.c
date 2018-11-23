@@ -13,7 +13,7 @@ uint32_t hTick;
 int red_value = 0;
 int steps = 8;
 
-uint32_t delay_smoothColorChange_PCB			= 55;
+uint32_t delay_smoothColorChange_PCB			= 65;
 uint32_t flag_delay_smoothColorChange_PCB = 0;
 
 /* Live color change */
@@ -153,56 +153,62 @@ void userRunControl(void)
 		switch(operation) {
 			case 0:
 				/* Set variables */
+				delay_operation = delay_LED_Mode_RainbowRun;
+				/* Start actions */		
+				LED_Mode_RainbowRun();	
+				break;
+			case 1:
+				/* Set variables */
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
 				LED_Mode_RunOneColor(USE_RGBSET_COLOR, 1);
 				break;
-			case 1:	
+			case 2:	
 				/* Set variables */
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
 				LED_Mode_RunOneColor_Mirror(USE_RGBSET_COLOR,2);
 				break;
-			case 2:
+			case 3:
 				/* Set variables */
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
 				LED_Mode_RunOneColor(USE_RGBSET_COLOR, 3);
 				break;
-			case 3:
+			case 4:
 				/* Set variables */
 				delay_operation = delay_ShiningLights;
 				/* Start actions */
 				LED_Mode_ShiningLights(3);
 				break;
-			case 4:
+			case 5:
 				/* Set variables */
 				delay_operation = runLED_Wave_delay;
 				/* Start actions */
 				LED_Mode_RunLED_Wave(0);
 				break;
-			case 5:
+			case 6:
 				/* Set variables */
 				delay_operation = runLED_Wave_delay;
 				/* Start actions */
 				LED_Mode_RunLED_Wave(1);
 				break;
-			case 6:
+			case 7:
 				/* Set variables */
 				delay_operation = runLED_Wave_delay;
 				/* Start actions */
 				LED_Mode_RunLED_Wave(2);
 				break;
-			case 7:
+			case 8:
 				/* Set variables */
 				delay_operation = runTwoColors_delay;
 				/* Start actions */
 				LED_Mode_RunTwoColors();
 				break;
-			case 8:
+			case 9:
 				operation = 0;
 				break;			
-			case 9:
+			case 10:
 				/* Set variables */
 				delay_operation = delay_LED_Mode_Star;
 				/* Start actions */
@@ -564,11 +570,10 @@ void LED_Mode_RainbowRun(void)
 	}
 	
 	/* Start	*/
-  uint16_t i;
-
-	for(i=1; i < NUM_LEDs+1; i++) 
+	calcOneLED(0, 0, 0, 0);
+	for(uint16_t i = 1; i < NUM_LEDs+1; i++) 
 	{
-		Wheel((i*20+j) & 255, i, brightness_LED_Mode_RainbowRun);
+		if (i <= 6) Wheel((i*20+j) & 255, i, brightness_LED_Mode_RainbowRun);
 	}
 	shiftForLED();
 	//operationRunning = 0;
