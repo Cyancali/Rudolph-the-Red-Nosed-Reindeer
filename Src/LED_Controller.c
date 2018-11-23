@@ -576,7 +576,7 @@ void LED_Mode_RainbowRun(void)
 }
 
 /*	LED_Mode_RunOneColorOneLED	*/
-void LED_Mode_RunOneColor(uint32_t flagColor, uint32_t numberLEDsRunning)
+void LED_Mode_RunOneColor(uint32_t flagColor, int numberLEDsRunning)
 {		
 	// Correction factor
 	uint32_t correctionFactor = 0;
@@ -591,7 +591,7 @@ void LED_Mode_RunOneColor(uint32_t flagColor, uint32_t numberLEDsRunning)
 	}
 	
 	/* Operation done, reset all parameters */
-	if ( runOneColor_iterLED == NUM_LEDs )
+	if ( runOneColor_iterLED == NUM_LEDs+numberLEDsRunning )
 	{
 		operationRunning = 0;		
 		operation++;
@@ -602,10 +602,10 @@ void LED_Mode_RunOneColor(uint32_t flagColor, uint32_t numberLEDsRunning)
 		// Blackout all LED bytes
 		calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], 0);
 		// Calculate bytes for the certain LEDs set to HIGH
-		for (signed int iterLED = runOneColor_iterLED; iterLED > (signed) (runOneColor_iterLED-numberLEDsRunning); iterLED--)
+		for (int iterLED = runOneColor_iterLED; iterLED > (runOneColor_iterLED-numberLEDsRunning); iterLED--)
 		{
 			//if (iterLED >= 0 && iterLED <= 5) calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], runOneColor_IndexCircle[iterLED]);
-			calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], iterLED);
+			if ( iterLED <= NUM_LEDs && iterLED >= 1 ) calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], iterLED);
 		}
 		// Send bytes for LEDs
 		shiftForLED();

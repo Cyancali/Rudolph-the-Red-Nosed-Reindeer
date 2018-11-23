@@ -43,7 +43,7 @@ void loadBrightnessData(uint32_t brightness);
 void LED_Mode_Star(void);
 void LED_Mode_Rainbow(void);
 void LED_Mode_RainbowRun(void);
-void LED_Mode_RunOneColor(uint32_t flagColor, uint32_t numberLEDsRunning);
+void LED_Mode_RunOneColor(uint32_t flagColor, int numberLEDsRunning);
 void LED_Mode_RunOneColor_Mirror(uint32_t flagColor, int numberLEDsRunning);
 void LED_Mode_ShiningLights(uint32_t NUMBER_LEDs);
 void LED_Mode_RunTwoColors(void);
