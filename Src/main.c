@@ -289,23 +289,23 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-		Test_RGB_LEDs();
-//		/* Start LED_Modes	*/
-//		userRunControl();
-//		/*	Check time and enable flags	*/
-//		userTimeControl();
-//		/*	Taster	*/  
-//		if((IRQ_TSC) || (msTick))
-//		{
-//			msTick = 0;
-//			tasten();
-//		}
-//		/* Brightness in FLASH speichern	*/
-//		if(hTick && (slideColorIndex != readDataFromFLASH()))
-//		{
-//			hTick = 0;
-//			saveDataToFLASH(slideColorIndex);
-//		}
+		//Test_RGB_LEDs();
+		/* Start LED_Modes	*/
+		userRunControl();
+		/*	Check time and enable flags	*/
+		userTimeControl();
+		/*	Taster	*/  
+		if((IRQ_TSC) || (msTick))
+		{
+			msTick = 0;
+			tasten();
+		}
+		/* Brightness in FLASH speichern	*/
+		if(hTick && (slideColorIndex != readDataFromFLASH()))
+		{
+			hTick = 0;
+			saveDataToFLASH(slideColorIndex);
+		}
 	}	
 	
 

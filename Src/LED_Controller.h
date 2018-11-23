@@ -5,6 +5,10 @@
 #include "string.h"
 #include "stm32f0xx_hal.h"
 
+/* Hardware fixed Constants	*/
+#define COLORBITS_PER_LED 8
+#define BITS_PER_LED 24
+
 /* Define change brightness variables */
 #define LOWER_BRIGHTNESS	0
 #define HIGHER_BRIGHTNESS	1
@@ -15,6 +19,9 @@
 /* OneRun Default Color */
 #define USE_DEFAULT_COLOR	0
 #define USE_RGBSET_COLOR	1
+
+/* PCB Specific LED Pattern */
+#define REINDEER_NOSE_LED_INDEX 7
 
 /* RGB LED parameter */
 extern int rgbLED[3];
@@ -46,11 +53,12 @@ void litAllLEDs(void);
 void Wheel(uint32_t WheelPos, uint16_t i, uint32_t divide);
 int rand_lim(int limit);
 void calculateLED_WaveBrightnessMatrix(uint32_t *ptrIterLED, int *ptrWaveBrightnessMatrix);
-void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, uint32_t lightLED);
 
 // HW layer functions
-void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, uint32_t lightLED);
-void shiftForLED(void);
 void shift_SW_LED(uint32_t lightLEDs);
+void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, uint32_t lightLED);
+void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, uint32_t lightLED);
+void Insert_PCB_Specific_Pattern_Into_BitArray(void);
+void shiftForLED(void);
 
 #endif /* __LED_Controller_H */

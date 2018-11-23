@@ -17,7 +17,7 @@ int Yfactor = 1;
 int Ofactor = 1;
 int Pfactor = 2;
 
-uint32_t delay_smoothColorChange 			= 500;
+uint32_t delay_smoothColorChange 			= 100;
 uint32_t flag_delay_smoothColorChange = 0;
 
 /* Operation GENERAL*/
@@ -108,6 +108,10 @@ uint32_t slideColorIndex_MAX = 10;
 /* Byte array for LED data to sent out */
 int thebit[24];
 int thebitArray[24*NUM_LEDs];
+
+/* Reindeer Mode */
+int red_value = 0;
+int steps = 8;
 
 
 /* Functions	*/
@@ -303,6 +307,12 @@ void userTimeControl(void)
 
 void smoothColorChange(void)
 {
+	/* Change Colors for PCB Specific LED Pattern */
+	/* Calculate red values for reindeer nose */
+	if (red_value >= 40) steps = -1;
+	if (red_value <=  0) steps = +1;
+	red_value += steps;
+	
 	/* Change colors */
 	
 	/* Red */
@@ -348,22 +358,22 @@ void smoothColorChange(void)
 
 	switch(color) {
 		case 0:
-			rgbLED[0]+=Rfactor;
+			rgbLED[0] +=   Rfactor;
 			break;
 		case 1:
-			rgbLED[0]+=3*Ofactor;
-			rgbLED[1]+=Ofactor;
+			rgbLED[0] += 3*Ofactor;
+			rgbLED[1] +=   Ofactor;
 			break;
 		case 2:
-			rgbLED[1]+=Gfactor;
+			rgbLED[1] +=   Gfactor;
 			break;
 		case 3:
-			rgbLED[0]+=Yfactor;
-			rgbLED[1]+=Yfactor;
+			rgbLED[0] +=   Yfactor;
+			rgbLED[1] +=   Yfactor;
 			break;
 		case 4:
-			rgbLED[0]+=Pfactor;
-			rgbLED[2]+=Pfactor;
+			rgbLED[0] +=   Pfactor;
+			rgbLED[2] +=   Pfactor;
 			break;
 		default:
 			color = 0;
@@ -945,6 +955,18 @@ void calculateLED_WaveBrightnessMatrix(uint32_t *ptrIterLED, int *ptrWaveBrightn
 
 
 /*
+* Function: shift_SW_LED
+* ----------------------
+* Lights up the number of LEDs with defined color in the rgbLED array
+* 
+* returns:								None
+*/
+void shift_SW_LED(uint32_t lightLEDs)
+{
+	calcLED(rgbLED[1], rgbLED[0], rgbLED[2], lightLEDs);
+	shiftForLED();
+}
+/*
 * Function: calcOneLED
 * --------------------
 * Calculates the values for the bit array for one certain LED
@@ -1014,8 +1036,6 @@ void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue
 		}		
 	}
 }
-
-
 /*
 * Function: calcLED
 * -----------------
@@ -1084,6 +1104,30 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 
 
 /*
+* Function: Insert_PCB_Specific_Pattern_Into_BitArray
+* ---------------------
+* According to set pattern for a set LED the values in the bit array gets updated before shifted out
+* 
+* returns:								None
+*/
+void Insert_PCB_Specific_Pattern_Into_BitArray(void)
+{	
+	uint32_t mask;
+	uint32_t masked_n;
+	/* Change values in the bit array */
+	for (uint32_t ind = 0; ind < COLORBITS_PER_LED; ind++)
+	{
+		// Blue - set to 0
+		thebitArray[ind + (REINDEER_NOSE_LED_INDEX-1)*BITS_PER_LED] 							        = 0;
+		// Red  - set to red_value
+		mask =  1 << (7-ind);
+		masked_n = red_value & mask;
+		thebitArray[ind + (REINDEER_NOSE_LED_INDEX-1)*BITS_PER_LED + COLORBITS_PER_LED]   = masked_n >> (7-ind);
+		// Green - set to 0 
+		thebitArray[ind + (REINDEER_NOSE_LED_INDEX-1)*BITS_PER_LED + COLORBITS_PER_LED*2] = 0;
+	}
+}
+/*
 * Function: shiftForLED
 * ---------------------
 * Pushes the values of the bit array via the defined GPIO out to the LEDs
@@ -1092,10 +1136,11 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 */
 void shiftForLED(void)
 {
+	Insert_PCB_Specific_Pattern_Into_BitArray();
 	//__attribute__((optimize(0)));
 	__disable_irq();
 	#pragma inline
-	for (uint32_t run = 0; run < 24*NUM_LEDs; run++)
+	for (uint32_t run = 0; run < BITS_PER_LED*NUM_LEDs; run++)
 	{
 		if(thebitArray[run] == 0)
 		{
@@ -1138,15 +1183,3 @@ void shiftForLED(void)
 }
 
 
-/*
-* Function: shift_SW_LED
-* ----------------------
-* Lights up the number of LEDs with defined color in the rgbLED array
-* 
-* returns:								None
-*/
-void shift_SW_LED(uint32_t lightLEDs)
-{
-	calcLED(rgbLED[1], rgbLED[0], rgbLED[2], lightLEDs);
-	shiftForLED();
-}
