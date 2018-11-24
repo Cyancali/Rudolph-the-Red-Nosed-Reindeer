@@ -1,4 +1,4 @@
-# Rudolph, the red reindeer christmas pcb
+# Rudolph, the Red-Nosed Reindeer as a christmas pcb
 
 Used microcontroller: STM32F042
 
