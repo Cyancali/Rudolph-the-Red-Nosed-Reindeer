@@ -104,6 +104,12 @@ uint32_t shiningLightsOnTree_ITER = 5;
 uint32_t shiningLightsOnTree_iter = 5;
 uint32_t positionLEDs[NUM_LEDs];
 
+/* Operation LED_MODE_MoveShiningLights	*/
+/* Shining lights on star */
+uint32_t delay_MoveShiningLights = 200;
+uint32_t moveShiningLightsOnTree_ITER = 6;
+uint32_t moveShiningLightsOnTree_iter = 6;
+
 /* Operation LED_MODE_RunTwoColors	*/
 /* Two colors on all LEDs */
 uint32_t runTwoColors_ITER = 3;
@@ -164,68 +170,74 @@ void userRunControl(void)
 				break;
 			case 1:
 				/* Set variables */
+				delay_operation = delay_MoveShiningLights;
+				/* Start actions */		
+				LED_Mode_MovingShiningLights();	
+				break;
+			case 2:
+				/* Set variables */
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
 				LED_Mode_RunOneColor(USE_RGBSET_COLOR, 1);
 				break;
-			case 2:	
+			case 3:	
 				/* Set variables */
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
 				LED_Mode_RunOneColor_Mirror(USE_RGBSET_COLOR,2);
 				break;
-			case 3:
+			case 4:
 				/* Set variables */
 				delay_operation = delay_RunOneColor;
 				/* Start actions */
 				LED_Mode_RunOneColor(USE_RGBSET_COLOR, 3);
 				break;
-			case 4:
+			case 5:
 				/* Set variables */
 				delay_operation = delay_ShiningLights;
 				/* Start actions */
 				LED_Mode_ShiningLights(3);
 				break;
-			case 5:
+			case 6:
 				/* Set variables */
 				delay_operation = runLED_Wave_delay;
 				/* Start actions */
 				LED_Mode_RunLED_Wave(0);
 				break;
-			case 6:
+			case 7:
 				/* Set variables */
 				delay_operation = runLED_Wave_delay;
 				/* Start actions */
 				LED_Mode_RunLED_Wave(1);
 				break;
-			case 7:
+			case 8:
 				/* Set variables */
 				delay_operation = runLED_Wave_delay;
 				/* Start actions */
 				LED_Mode_RunLED_Wave(2);
 				break;
-			case 8:
+			case 9:
 				/* Set variables */
 				delay_operation = runTwoColors_delay;
 				/* Start actions */
 				LED_Mode_RunTwoColors();
 				break;
-			case 9:
+			case 10:
 				/* Set variables */
 				delay_operation = delay_ShiningLights;
 				/* Start actions */
 				LED_Mode_ShiningLights(NUM_LEDs);
 				break;
-			case 10:
+			case 11:
 				operation = 0;
 				break;			
-			case 11:
+			case 12:
 				/* Set variables */
 				delay_operation = delay_LED_Mode_Star;
 				/* Start actions */
 				LED_Mode_Star();
 				break;				
-			case 12:
+			case 13:
 				LED_Mode_Rainbow();
 				operation = 0;
 				break;
@@ -763,6 +775,47 @@ void LED_Mode_ShiningLights(uint32_t NUMBER_LEDs)
 	}
 }
 
+/* LED_Mode_MovingShiningLights */
+void LED_Mode_MovingShiningLights(void)
+{
+	uint32_t smooth_rgbLEDs[3] = {0};
+	
+	/* Smooth brightness */
+	smooth_rgbLEDs[0] = (rgbLED[0]*runTwoColors_iterShift)/4;
+	smooth_rgbLEDs[1] = (rgbLED[1]*runTwoColors_iterShift)/4;
+	smooth_rgbLEDs[2] = (rgbLED[2]*runTwoColors_iterShift)/4;
+	
+	/* Check if LEDs have any iterations left */
+	if (moveShiningLightsOnTree_iter)
+	{
+		// Blackout all LED bytes
+		calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], 0);
+		// Calculate bytes for the certain LEDs set to HIGH
+		calcOneLED(smooth_rgbLEDs[1], smooth_rgbLEDs[0], smooth_rgbLEDs[2], moveShiningLightsOnTree_iter);	
+		calcOneLED(smooth_rgbLEDs[1], smooth_rgbLEDs[0], smooth_rgbLEDs[2], NUM_LEDs-moveShiningLightsOnTree_iter);	
+		// Send bytes for LEDs
+		shiftForLED();
+		
+		/* Smooth brightness */
+		runTwoColors_iterShift += runTwoColors_iterShiftAdd;
+		if(runTwoColors_iterShift == 4)
+		{
+			runTwoColors_iterShiftAdd = -1;
+		}
+		else if (runTwoColors_iterShift == 0 && runTwoColors_iterShiftAdd == -1)
+		{
+			runTwoColors_iterShiftAdd = 1;		
+			moveShiningLightsOnTree_iter--;
+		}
+	}
+	/* Operation done, reset all parameters */
+	else 
+	{
+		operationRunning = 0;		
+		operation++;
+	}
+}
+
 /* LED_Mode_RunTwoColors */
 void LED_Mode_RunTwoColors(void)
 {
@@ -1178,6 +1231,7 @@ void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, u
 */
 void Insert_PCB_Specific_Pattern_Into_BitArray(void)
 {	
+	int val = (red_value_nose * slideColorIndex)/4;
 	uint32_t mask;
 	uint32_t masked_n;
 	/* Change values in the bit array */
@@ -1187,7 +1241,7 @@ void Insert_PCB_Specific_Pattern_Into_BitArray(void)
 		thebitArray[ind + (REINDEER_NOSE_LED_INDEX-1)*BITS_PER_LED] 							        = 0;
 		// Red  - set to red_value_nose
 		mask =  1 << (7-ind);
-		masked_n = red_value_nose & mask;
+		masked_n = val & mask;
 		thebitArray[ind + (REINDEER_NOSE_LED_INDEX-1)*BITS_PER_LED + COLORBITS_PER_LED]   = masked_n >> (7-ind);
 		// Green - set to 0 
 		thebitArray[ind + (REINDEER_NOSE_LED_INDEX-1)*BITS_PER_LED + COLORBITS_PER_LED*2] = 0;
