@@ -222,7 +222,6 @@ void tasten(void)
 			default:
 						HAL_TSC_IODischarge(&htsc,1);
 						HAL_TSC_IODischarge(&htsc,2);
-						HAL_TSC_IODischarge(&htsc,3);
 						nextstep = 1;
 			break;
 
@@ -295,7 +294,7 @@ int main(void)
 		/*	Check time and enable flags	*/
 		userTimeControl();
 		/*	Taster	*/  
-		if((IRQ_TSC) || (msTick))
+		if(IRQ_TSC || msTick)
 		{
 			msTick = 0;
 			tasten();

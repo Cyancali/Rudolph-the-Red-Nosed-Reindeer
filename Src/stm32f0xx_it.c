@@ -36,6 +36,7 @@
 #include "stm32f0xx_it.h"
 
 /* USER CODE BEGIN 0 */
+extern uint32_t IRQ_TSC;
 
 /* USER CODE END 0 */
 
@@ -135,7 +136,7 @@ void TSC_IRQHandler(void)
   /* USER CODE END TSC_IRQn 0 */
   HAL_TSC_IRQHandler(&htsc);
   /* USER CODE BEGIN TSC_IRQn 1 */
-
+	IRQ_TSC = 1;
   /* USER CODE END TSC_IRQn 1 */
 }
 

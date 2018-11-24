@@ -157,11 +157,11 @@ void userRunControl(void)
 		/* Execute operation */
 		switch(operation) {
 			case 0:
-//				/* Set variables */
-//				delay_operation = delay_LED_Mode_RainbowRun;
-//				/* Start actions */		
-//				LED_Mode_RainbowRun();	
-//				break;
+				/* Set variables */
+				delay_operation = delay_LED_Mode_RainbowRun;
+				/* Start actions */		
+				LED_Mode_RainbowRun();	
+				break;
 			case 1:
 				/* Set variables */
 				delay_operation = delay_RunOneColor;
@@ -205,11 +205,11 @@ void userRunControl(void)
 				LED_Mode_RunLED_Wave(2);
 				break;
 			case 8:
-//				/* Set variables */
-//				delay_operation = runTwoColors_delay;
-//				/* Start actions */
-//				LED_Mode_RunTwoColors();
-//				break;
+				/* Set variables */
+				delay_operation = runTwoColors_delay;
+				/* Start actions */
+				LED_Mode_RunTwoColors();
+				break;
 			case 9:
 				/* Set variables */
 				delay_operation = delay_ShiningLights;
@@ -487,7 +487,7 @@ void prepareNextColorChange(void)
 void changeToNextEvent(void)
 {
 	// Go to next event
-	operation = (operation==7) ? 0 : operation+1;
+	operation = (operation>=9) ? 0 : operation+1;
 	// Reset Mode running
 	operationRunning = 0;
 }
@@ -496,12 +496,12 @@ void changeBrightness(uint32_t ChangeBrightnessDir)
 	// HIGHER_BRIGHTNESS	1
 	if(ChangeBrightnessDir)
 	{
-		slideColorIndex = (slideColorIndex<slideColorIndex_MAX) ? slideColorIndex+1 : slideColorIndex;
+		slideColorIndex = (slideColorIndex < slideColorIndex_MAX) ? slideColorIndex+1 : slideColorIndex;
 	}
 	// LOWER_BRIGHTNESS	0
 	else if(!ChangeBrightnessDir)
 	{
-		slideColorIndex = (slideColorIndex>slideColorIndex_MIN) ? slideColorIndex-1 : slideColorIndex;
+		slideColorIndex = (slideColorIndex > slideColorIndex_MIN) ? slideColorIndex-1 : slideColorIndex;
 	}
 }
 
@@ -1042,8 +1042,7 @@ void shift_SW_LED(uint32_t lightLEDs)
 * returns:								None
 */
 void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, uint32_t lightLED)
-{
-		
+{		
 	/* Adjust brightness */
 	intByteGreen 	= (intByteGreen	*	slideColorIndex)/4;
 	intByteRed 		= (intByteRed		*	slideColorIndex)/4;
@@ -1112,7 +1111,11 @@ void calcOneLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue
 * returns:								None
 */
 void calcLED(uint32_t intByteGreen, uint32_t intByteRed, uint32_t intByteBlue, uint32_t lightLED)
-{
+{		
+	/* Adjust brightness */
+	intByteGreen 	= (intByteGreen	*	slideColorIndex)/4;
+	intByteRed 		= (intByteRed		*	slideColorIndex)/4;
+	intByteBlue 	= (intByteBlue	*	slideColorIndex)/4;
 	
 	uint32_t mask;
 	uint32_t masked_n;
