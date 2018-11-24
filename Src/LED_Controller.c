@@ -206,15 +206,21 @@ void userRunControl(void)
 				LED_Mode_RunTwoColors();
 				break;
 			case 9:
+				/* Set variables */
+				delay_operation = delay_ShiningLights;
+				/* Start actions */
+				LED_Mode_ShiningLights(NUM_LEDs);
+				break;
+			case 10:
 				operation = 0;
 				break;			
-			case 10:
+			case 11:
 				/* Set variables */
 				delay_operation = delay_LED_Mode_Star;
 				/* Start actions */
 				LED_Mode_Star();
 				break;				
-			case 11:
+			case 12:
 				LED_Mode_Rainbow();
 				operation = 0;
 				break;
@@ -687,15 +693,17 @@ void LED_Mode_ShiningLights(uint32_t NUMBER_LEDs)
 		
 		// Blackout all LED bytes
 		calcOneLED(rgbLED[1], rgbLED[0], rgbLED[2], 0);
-		// Set all LEDs to orange
-//		for (uint32_t iterLED = 0; iterLED < NUM_LEDs; iterLED++)
-//		{
-//			calcOneLED(10, 30, 0, iterLED+1);
-//		}
 		// Calculate bytes for the certain LEDs set to HIGH
 		for (uint32_t iterLED = 0; iterLED < NUMBER_LEDs; iterLED++)
 		{
-			calcOneLED(smooth_rgbLEDs[1], smooth_rgbLEDs[0], smooth_rgbLEDs[2], positionLEDs[iterLED]);
+			if (NUMBER_LEDs == NUM_LEDs)
+			{
+				calcOneLED(smooth_rgbLEDs[1], smooth_rgbLEDs[0], smooth_rgbLEDs[2], iterLED+1);
+			}
+			else
+			{
+				calcOneLED(smooth_rgbLEDs[1], smooth_rgbLEDs[0], smooth_rgbLEDs[2], positionLEDs[iterLED]);
+			}			
 		}
 		// Send bytes for LEDs
 		shiftForLED();
