@@ -10,13 +10,17 @@ uint32_t hTick;
 
 /* PCB Specific live color change */
 // Reindeer Mode
-int red_value = 0;
+int red_value_nose = 0;
 int steps = 8;
 
 uint32_t delay_smoothColorChange_PCB			= 65;
 uint32_t flag_delay_smoothColorChange_PCB = 0;
 
 /* Live color change */
+int red_value 	= 0;
+int green_value = 0;
+int blue_value 	= 0;
+
 uint32_t color = 0;
 
 int Rfactor = 2;
@@ -24,6 +28,7 @@ int Gfactor = 2;
 int Yfactor = 1;
 int Ofactor = 1;
 int Pfactor = 2;
+int Wfactor = 2;
 
 uint32_t delay_smoothColorChange 			= 500;
 uint32_t flag_delay_smoothColorChange = 0;
@@ -152,11 +157,11 @@ void userRunControl(void)
 		/* Execute operation */
 		switch(operation) {
 			case 0:
-				/* Set variables */
-				delay_operation = delay_LED_Mode_RainbowRun;
-				/* Start actions */		
-				LED_Mode_RainbowRun();	
-				break;
+//				/* Set variables */
+//				delay_operation = delay_LED_Mode_RainbowRun;
+//				/* Start actions */		
+//				LED_Mode_RainbowRun();	
+//				break;
 			case 1:
 				/* Set variables */
 				delay_operation = delay_RunOneColor;
@@ -200,11 +205,11 @@ void userRunControl(void)
 				LED_Mode_RunLED_Wave(2);
 				break;
 			case 8:
-				/* Set variables */
-				delay_operation = runTwoColors_delay;
-				/* Start actions */
-				LED_Mode_RunTwoColors();
-				break;
+//				/* Set variables */
+//				delay_operation = runTwoColors_delay;
+//				/* Start actions */
+//				LED_Mode_RunTwoColors();
+//				break;
 			case 9:
 				/* Set variables */
 				delay_operation = delay_ShiningLights;
@@ -326,117 +331,147 @@ void smoothColorChange_PCB(void)
 {
 	/* Change Colors for PCB Specific LED Pattern */
 	/* Calculate red values for reindeer nose */
-	if (red_value >= 40) steps = -1;
-	if (red_value <=  0) steps = +1;
-	red_value += steps;
+	if (red_value_nose >= 40) steps = -1;
+	if (red_value_nose <=  0) steps = +1;
+	red_value_nose += steps;
 }
 
 void smoothColorChange(void)
 {
 	/* Change colors */
-	
+
 	/* Red */
-	if (rgbLED[0] >= 40 && color == 0) Rfactor = -2;
-	if (rgbLED[0] == 4 && Rfactor == -2) 
+	if (red_value >= 40 && color == 0) Rfactor = -2;
+	if (red_value == 2 && Rfactor == -2) 
 	{
 		color++;
 		prepareNextColorChange();
 	}
 	
 	/* Orange */
-	if (rgbLED[0] >= 45 && rgbLED[1] >= 15 && color == 1) Ofactor = -1;
-	if (rgbLED[1] == 4 && Ofactor == -1) 
+	if (red_value >= 45 && green_value >= 15 && color == 1) Ofactor = -1;
+	if (green_value == 2 && Ofactor == -1) 
 	{
 		color++;
 		prepareNextColorChange();
 	}
 	
 	/* Green */
-	if (rgbLED[1] >= 40 && color == 2) Gfactor = -2;
-	if (rgbLED[1] == 4 && Gfactor == -2)
+	if (green_value >= 40 && color == 2) Gfactor = -2;
+	if (green_value == 2 && Gfactor == -2)
 	{
 		color++;
 		prepareNextColorChange();
 	}
 	
 	/* Yellow */
-	if (rgbLED[0] >= 40 && rgbLED[1] >= 40 && color == 3) Yfactor = -2;
-	if (rgbLED[1] == 4 && Yfactor == -2) 
+	if (red_value >= 40 && green_value >= 40 && color == 3) Yfactor = -2;
+	if (green_value == 2 && Yfactor == -2) 
 	{
 		color++;
 		prepareNextColorChange();
 	}
 	
 	/* Purple */
-	if (rgbLED[0] >= 40 && rgbLED[2] >= 40 && color == 4) Pfactor = -2;
-	if (rgbLED[2] == 4 && Pfactor == -2) 
+	if (red_value >= 40 && blue_value >= 40 && color == 4) Pfactor = -2;
+	if (blue_value == 2 && Pfactor == -2) 
 	{
 		color++;
+		prepareNextColorChange();
+	}
+	
+	/* White */
+	if (red_value >= 40 && green_value >= 40 && blue_value >= 40 && color == 5) Wfactor = -2;
+	if (blue_value == 2 && Wfactor == -2) 
+	{
+		color = 0;
 		prepareNextColorChange();
 	}
 	
 
 	switch(color) {
 		case 0:
-			rgbLED[0] +=   Rfactor;
+			red_value 	+=   Rfactor;
 			break;
 		case 1:
-			rgbLED[0] += 3*Ofactor;
-			rgbLED[1] +=   Ofactor;
+			red_value 	+= 3*Ofactor;
+			green_value +=   Ofactor;
 			break;
 		case 2:
-			rgbLED[1] +=   Gfactor;
+			green_value +=   Gfactor;
 			break;
 		case 3:
-			rgbLED[0] +=   Yfactor;
-			rgbLED[1] +=   Yfactor;
+			red_value 	+=   Yfactor;
+			green_value +=   Yfactor;
 			break;
 		case 4:
-			rgbLED[0] +=   Pfactor;
-			rgbLED[2] +=   Pfactor;
+			red_value 	+=   Pfactor;
+			blue_value 	+=   Pfactor;
+			break;
+		case 5:
+			red_value 	+=   Wfactor;
+			green_value +=   Wfactor;
+			blue_value 	+=   Wfactor;
 			break;
 		default:
 			color = 0;
-			break;
-	
+			break;	
 	}
-	
+	// Copy all values to the RGB array	
+	rgbLED[0] = red_value;
+	rgbLED[1] = green_value;
+	rgbLED[2] = blue_value;
+	// Clear flag
 	flag_delay_smoothColorChange = 0;
 }
 
 
 void prepareNextColorChange(void)
 {
+	// Reset all color factors
+	Rfactor = 0;
+	Ofactor = 0;
+	Gfactor = 0;
+	Yfactor = 0;
+	Pfactor = 0;
+	Wfactor = 0;
+	// Reset/set color values and factors 
 	switch(color) {
 		case 0:
-			rgbLED[0] =  4;
-			rgbLED[1] =  0;
-			rgbLED[2] =  0;
-			Rfactor 	= +2;
+			red_value 	=  2;
+			green_value =  0;
+			blue_value 	=  0;
+			Rfactor 		= +2;
 			break;
 		case 1:
-			rgbLED[0] =  12;
-			rgbLED[1] =  4;
-			rgbLED[2] =  0;
-			Ofactor 	= +1;
+			red_value 	=  6;
+			green_value =  2;
+			blue_value 	=  0;
+			Ofactor 		= +1;
 			break;
 		case 2:
-			rgbLED[0] =  0;			
-			rgbLED[1] =  4;
-			rgbLED[2] =  0;
-			Gfactor 	= +2;
+			red_value 	=  0;			
+			green_value =  2;
+			blue_value 	=  0;
+			Gfactor 		= +2;
 			break;
 		case 3:
-			rgbLED[0] =  4;
-			rgbLED[1] =  4;
-			rgbLED[2] =  0;
-			Yfactor 	= +2;
+			red_value 	=  2;
+			green_value =  2;
+			blue_value 	=  0;
+			Yfactor 		= +2;
 			break;
 		case 4:
-			rgbLED[0] =  4;
-			rgbLED[1] =  0;
-			rgbLED[2] =  4;
-			Pfactor 	= +2;
+			red_value   =  2;
+			green_value =  0;
+			blue_value  =  2;
+			Pfactor 	  = +2;
+			break;
+		case 5:
+			red_value   =  2;
+			green_value =  2;
+			blue_value  =  2;
+			Wfactor 	  = +2;
 			break;
 		default:
 			color = 0;
@@ -1147,9 +1182,9 @@ void Insert_PCB_Specific_Pattern_Into_BitArray(void)
 	{
 		// Blue - set to 0
 		thebitArray[ind + (REINDEER_NOSE_LED_INDEX-1)*BITS_PER_LED] 							        = 0;
-		// Red  - set to red_value
+		// Red  - set to red_value_nose
 		mask =  1 << (7-ind);
-		masked_n = red_value & mask;
+		masked_n = red_value_nose & mask;
 		thebitArray[ind + (REINDEER_NOSE_LED_INDEX-1)*BITS_PER_LED + COLORBITS_PER_LED]   = masked_n >> (7-ind);
 		// Green - set to 0 
 		thebitArray[ind + (REINDEER_NOSE_LED_INDEX-1)*BITS_PER_LED + COLORBITS_PER_LED*2] = 0;
