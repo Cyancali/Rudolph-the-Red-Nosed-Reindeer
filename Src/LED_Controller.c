@@ -543,41 +543,45 @@ void LED_Mode_RainbowRun(void)
 		delay_LED_Mode_RainbowRun = 15;
 		delay_LED_Mode_RainbowRun_Step 			= +1;
 		operationRunning = 0;
+		operation++;
 	}
-	/* Set delay change to positive	*/
-	if (delay_LED_Mode_RainbowRun <= 5)
+	else
 	{
-		delay_LED_Mode_RainbowRun_Step 			= +1;
+		/* Set delay change to positive	*/
+		if (delay_LED_Mode_RainbowRun <= 5)
+		{
+			delay_LED_Mode_RainbowRun_Step 			= +1;
+		}
+		/* Set delay change to negative	*/
+		else if (delay_LED_Mode_RainbowRun >= 25)
+		{
+			delay_LED_Mode_RainbowRun_Step 			= -1;
+		}
+		/* Change delay time for flag	*/
+		if (!(j%(1000/delay_LED_Mode_RainbowRun)))
+		{
+			delay_LED_Mode_RainbowRun 			+= delay_LED_Mode_RainbowRun_Step;
+		}
+		/* Fade in and out: brightness */
+		if (j < 50)
+		{
+			brightness_LED_Mode_RainbowRun = 60 - j;
+		}
+		else if (j > 950)
+		{
+			brightness_LED_Mode_RainbowRun = 60 + (j-1000);		
+		}
+		
+		/* Start	*/
+		calcOneLED(0, 0, 0, 0);
+		for(uint16_t i = 1; i < NUM_LEDs+1; i++) 
+		{
+			if (i <= 6) Wheel((i*20+j) & 255, i, brightness_LED_Mode_RainbowRun);
+		}
+		shiftForLED();
+		//operationRunning = 0;
+		j++;
 	}
-	/* Set delay change to negative	*/
-	else if (delay_LED_Mode_RainbowRun >= 25)
-	{
-		delay_LED_Mode_RainbowRun_Step 			= -1;
-	}
-	/* Change delay time for flag	*/
-  if (!(j%(1000/delay_LED_Mode_RainbowRun)))
-	{
-		delay_LED_Mode_RainbowRun 			+= delay_LED_Mode_RainbowRun_Step;
-	}
-	/* Fade in and out: brightness */
-	if (j < 50)
-	{
-		brightness_LED_Mode_RainbowRun = 60 - j;
-	}
-	else if (j > 950)
-	{
-		brightness_LED_Mode_RainbowRun = 60 + (j-1000);		
-	}
-	
-	/* Start	*/
-	calcOneLED(0, 0, 0, 0);
-	for(uint16_t i = 1; i < NUM_LEDs+1; i++) 
-	{
-		if (i <= 6) Wheel((i*20+j) & 255, i, brightness_LED_Mode_RainbowRun);
-	}
-	shiftForLED();
-	//operationRunning = 0;
-	j++;
 }
 
 /*	LED_Mode_RunOneColorOneLED	*/

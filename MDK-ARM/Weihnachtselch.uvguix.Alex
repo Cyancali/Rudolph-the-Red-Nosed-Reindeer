@@ -3525,11 +3525,11 @@
       </Doc>
       <Doc>
         <Name>..\Src\LED_Controller.c</Name>
-        <ColumnNumber>2</ColumnNumber>
-        <TopLine>164</TopLine>
-        <CurrentLine>573</CurrentLine>
+        <ColumnNumber>16</ColumnNumber>
+        <TopLine>146</TopLine>
+        <CurrentLine>546</CurrentLine>
         <Folding>1</Folding>
-        <ContractedFolders>125,133,269,277,319,328,402,446,453,467,487,520,584,623,662,720,776,844,881,926,952,980,1067</ContractedFolders>
+        <ContractedFolders>125,133,269,277,319,328,402,446,453,467,487,520,627,666,724,780,848,885,930,956,984,1071</ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
       <Doc>
