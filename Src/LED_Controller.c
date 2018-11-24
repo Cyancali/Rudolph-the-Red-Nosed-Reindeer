@@ -39,7 +39,7 @@ uint32_t operationRunning 		= 0;
 uint32_t delay_operation 			= 0;
 uint32_t flag_delay_operation = 0;
 
-uint32_t delay_operation_null 		 = 30;
+uint32_t delay_operation_null 		 = 5;
 uint32_t flag_delay_operation_null = 0;
 
 /* Operation LED_Mode_Star	*/
