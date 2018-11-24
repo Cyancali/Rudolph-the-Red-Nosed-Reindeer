@@ -57,6 +57,7 @@
 #define  TOUCH2         			100           // Grenzwert -> Taste erkannt
 
 #define DURATION_TOUCH_SHORT	1						// Hochzählen, erst nach x Touch Erkennungen Event auslösen
+#define DURATION_TOUCH_LONG 	0xFF				// Hochzählen, erst nach x Touch Erkennungen Event auslösen
 
 #define  FILTER         			0xFF          // Koeffizienten Filter
 
@@ -142,22 +143,30 @@ void tasten(void)
 							}
 							// Taste gedrückt
 							if(taste1.tsc_wert + TOUCH1 < taste1.mittel)
-							{
+							{								
 								taste1.released = 0;
+								taste1.triggered = 1;	
 								taste1.pressed = (taste1.pressed < 0xFFFF) ? taste1.pressed+1 : taste1.pressed;	// Overflow Schutz
-								// Event Touch Taste 1
-								if (taste1.pressed > DURATION_TOUCH_SHORT && !taste1.triggered)
-								{
-									changeBrightness(LOWER_BRIGHTNESS);
-									taste1.triggered = 1;
-								}
 							}
 							// Taste nicht gedrückt
 							else
 							{
-								taste1.pressed = 0;
-								taste1.triggered = 0;
-								taste1.released = (taste1.released < 0xFFFF) ? taste1.released+1 : taste1.released;	// Overflow Schutz
+								// Event Touch Taste 1 - short
+									if (	 (taste1.pressed > DURATION_TOUCH_SHORT) 
+										 &&  (taste1.pressed < DURATION_TOUCH_LONG) 
+										 &&   taste1.triggered)
+								{
+									changeBrightness(LOWER_BRIGHTNESS);
+								}
+								// Event Touch Taste 1 - long
+								else if ((taste1.pressed > DURATION_TOUCH_LONG) 
+										 &&   taste1.triggered)
+								{
+									skipDoingNothing();							
+								}
+								taste1.pressed 		= 0;
+								taste1.triggered 	= 0;
+								taste1.released 	= (taste1.released < 0xFFFF) ? taste1.released+1 : taste1.released;	// Overflow Schutz
 							}
 						}
 						HAL_TSC_IODischarge(&htsc,1);
@@ -196,21 +205,31 @@ void tasten(void)
 							// Taste gedrückt
 							if(taste2.tsc_wert + TOUCH2 < taste2.mittel)
 							{
-								taste2.released = 0;
-								taste2.pressed = (taste2.pressed < 0xFFFF) ? taste2.pressed+1 : taste2.pressed;	// Overflow Schutz
-								// Event Touch Taste 1
-								if (taste2.pressed > DURATION_TOUCH_SHORT && !taste2.triggered)
-								{
-									changeBrightness(HIGHER_BRIGHTNESS);
-									taste2.triggered = 1;
-								}
+								skipDoingNothing();
+								
+								taste2.released 	= 0;
+								taste2.triggered 	= 1;	
+								taste2.pressed 		= (taste2.pressed < 0xFFFF) ? taste2.pressed+1 : taste2.pressed;	// Overflow Schutz
 							}
 							// Taste nicht gedrückt
 							else
 							{
-								taste2.pressed = 0;
-								taste2.triggered = 0;
-								taste2.released = (taste2.released < 0xFFFF) ? taste2.released+1 : taste2.released;	// Overflow Schutz
+								// Event Touch Taste 2 - short
+									if (	 (taste2.pressed > DURATION_TOUCH_SHORT) 
+										 &&  (taste2.pressed < DURATION_TOUCH_LONG) 
+										 &&   taste2.triggered)
+								{
+									changeBrightness(HIGHER_BRIGHTNESS);
+								}
+								// Event Touch Taste 2 - long
+								else if ((taste2.pressed > DURATION_TOUCH_LONG) 
+										 &&   taste2.triggered)
+								{
+									skipDoingNothing();							
+								}
+								taste2.pressed 		= 0;
+								taste2.triggered 	= 0;
+								taste2.released 	= (taste2.released < 0xFFFF) ? taste2.released+1 : taste2.released;	// Overflow Schutz
 							}
 						}
 						HAL_TSC_IODischarge(&htsc,1);

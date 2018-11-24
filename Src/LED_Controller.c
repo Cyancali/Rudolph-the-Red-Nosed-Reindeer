@@ -39,7 +39,7 @@ uint32_t operationRunning 		= 0;
 uint32_t delay_operation 			= 0;
 uint32_t flag_delay_operation = 0;
 
-uint32_t delay_operation_null 		 = 3;
+uint32_t delay_operation_null 		 = 30;
 uint32_t flag_delay_operation_null = 0;
 
 /* Operation LED_Mode_Star	*/
@@ -259,7 +259,8 @@ void userRunControl(void)
 			
 			runOneColor_Mirror_iterLED = NUM_LEDs;
 			
-			shiningLightsOnTree_iter = shiningLightsOnTree_ITER;			
+			shiningLightsOnTree_iter 			= shiningLightsOnTree_ITER;
+			moveShiningLightsOnTree_iter 	= moveShiningLightsOnTree_ITER;				
 			
 			runLED_Wave_iterLED = 0;
 			memset(waveBrightnessMatrix, 0, 12 * sizeof(int));
@@ -502,6 +503,10 @@ void changeToNextEvent(void)
 	operation = (operation>=9) ? 0 : operation+1;
 	// Reset Mode running
 	operationRunning = 0;
+}
+void skipDoingNothing(void)
+{
+	flag_delay_operation_null = 1;
 }
 void changeBrightness(uint32_t ChangeBrightnessDir)
 {

@@ -36,6 +36,7 @@ void prepareNextColorChange(void);
 
 // Touch functions
 void changeToNextEvent(void);
+void skipDoingNothing(void);
 void changeBrightness(uint32_t ChangeBrightnessDir);
 void loadBrightnessData(uint32_t brightness);
 
