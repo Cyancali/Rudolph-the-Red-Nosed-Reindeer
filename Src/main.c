@@ -205,8 +205,6 @@ void tasten(void)
 							// Taste gedrückt
 							if(taste2.tsc_wert + TOUCH2 < taste2.mittel)
 							{
-								skipDoingNothing();
-								
 								taste2.released 	= 0;
 								taste2.triggered 	= 1;	
 								taste2.pressed 		= (taste2.pressed < 0xFFFF) ? taste2.pressed+1 : taste2.pressed;	// Overflow Schutz
@@ -295,7 +293,7 @@ int main(void)
 	
 	initFLASH_DataSaver();
 	loadBrightnessData(readDataFromFLASH());
-	
+	skipDoingNothing();
 	//saveDataToFLASH(dataS);
 	
   /* USER CODE END 2 */
