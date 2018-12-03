@@ -56,7 +56,7 @@
 #define  TOUCH1         			100           // Grenzwert -> Taste erkannt 
 #define  TOUCH2         			100           // Grenzwert -> Taste erkannt
 
-#define DURATION_TOUCH_SHORT	1						// Hochzählen, erst nach x Touch Erkennungen Event auslösen
+#define DURATION_TOUCH_SHORT	0x0F				// Hochzählen, erst nach x Touch Erkennungen Event auslösen
 #define DURATION_TOUCH_LONG 	0xFF				// Hochzählen, erst nach x Touch Erkennungen Event auslösen
 
 #define  FILTER         			0xFF          // Koeffizienten Filter
